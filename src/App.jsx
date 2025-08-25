@@ -220,7 +220,7 @@ function WeatherApp() {
     setSaving(true);
     setSaveMsg('');
     try {
-      await axios.post('http://localhost:5555/save-weather', {
+      await axios.post('https://api-backend-fx9p.onrender.com/save-weather', {
         city: weather.data.name,
         weather: weather.data,
       });
@@ -237,7 +237,7 @@ function WeatherApp() {
   // Fetch saved weather data from backend
   const fetchSavedData = async () => {
     try {
-      const res = await axios.get('http://localhost:5555/get-weather');
+      const res = await axios.get('https://api-backend-fx9p.onrender.com/get-weather');
       setSavedData(res.data);
     } catch (err) {
       console.error('Failed to fetch saved data:', err);
