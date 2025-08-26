@@ -32,11 +32,14 @@
     animation: logo-spin infinite 20s linear;
   }
 }
+input::placeholder {
+  color: #000000;
+  opacity: 1;   
+}
 
 .card {
   padding: 2em;
 }
-
 /* App.css */
 * {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -44,12 +47,12 @@
 }
 
 html {
-    background-color: #f7f7f7;
+    background-color: #292929;
 }
 
 .app-name {
     font-size: 2.3rem;
-    color: rgb(17, 144, 0);
+    color: rgb(252, 31, 19);
     margin-bottom: 16px;
 }
 
@@ -68,7 +71,7 @@ html {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* .city-search {
+.city-search {
     width: 100%;
     max-width: 400px;
     box-sizing: border-box;
@@ -84,7 +87,7 @@ html {
     transition: width 0.4s ease-in-out;
     color: #333;
 }
- */
+
 .city-search:focus {
     width: 100%;
 }
@@ -158,18 +161,24 @@ body, html, #root, .App {
 h1, h2, p, span, button {
   color: #000; /* ensure text is black */
 }
-input::placeholder {
-  color: #000000;
-  opacity: 1;   
-}
  @media only screen and (max-width: 768px) {
   input::placeholder {
     background-color: #434343;
     color: white;      
     opacity: 1;        
   }
-   button{
+  button{
+    border: 1px solid black;
     background-color: rgb(77, 77, 77);
     color: white;
   }
+}
+
+button{
+  border: 1px solid black;
+}
+button:hover{
+  transition: ease-in-out 100ms;
+  transform: scale(1.01);
+  border: 1px solid blue;
 }
