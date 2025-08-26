@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { ClipLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,7 @@ function WeatherApp() {
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
   const [savedData, setSavedData] = useState([]);
+  const [isButtonClicked, setIsButtonClicked] = useState(false); // ✅ track button click
 
   const toDateFunction = () => {
     const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -19,7 +20,7 @@ function WeatherApp() {
     return `${WeekDays[currentDate.getDay()]} ${currentDate.getDate()} ${months[currentDate.getMonth()]}`;
   };
 
-  // Search weather from OpenWeather API
+  // Searching weather from OpenWeather API
   const search = async (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -27,7 +28,7 @@ function WeatherApp() {
       setSaveMsg('');
 
       const url = 'https://api.openweathermap.org/data/2.5/weather';
-      const api_key = 'f00c38e0279b7bc85480c3fe775d518c'; // move to backend later
+      const api_key = 'f00c38e0279b7bc85480c3fe775d518c'; 
 
       try {
         const res = await axios.get(url, {
@@ -54,7 +55,7 @@ function WeatherApp() {
         weather: weather.data,
       });
       setSaveMsg('✅ Saved to database');
-      fetchSavedData(); // refresh table
+      // fetchSavedData(); 
     } catch (err) {
       console.error('Failed to save weather:', err);
       setSaveMsg('❌ Failed to save');
@@ -63,20 +64,17 @@ function WeatherApp() {
     }
   };
 
-  // Fetch saved weather data from backend
+  // Fetching saved weather data from backend
   const fetchSavedData = async () => {
+    setIsButtonClicked(true); // ✅ mark button clicked
     try {
       const res = await axios.get('https://api-backend-fx9p.onrender.com/get-weather');
       setSavedData(res.data);
     } catch (err) {
       console.error('Failed to fetch saved data:', err);
+      setSavedData([]); // keep empty on error
     }
   };
-
-  // Fetch saved data on mount
-  useEffect(() => {
-    fetchSavedData();
-  }, []);
 
   return (
     <div className="App">
@@ -84,6 +82,7 @@ function WeatherApp() {
 
       <div className="search-bar">
         <input
+          className="search"
           type="text"
           placeholder="Enter City Name..."
           value={input}
@@ -119,31 +118,42 @@ function WeatherApp() {
       )}
 
       <hr />
-      <h2>Saved Weather Data</h2>
-      {savedData.length > 0 ? (
-        <table border="1" cellPadding="8" style={{ margin: "auto", marginTop: 16 }}>
-          <thead>
-            <tr>
-              <th>City</th>
-              <th>Temperature</th>
-              <th>Description</th>
-              <th>Wind Speed</th>
-              <th>Saved At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {savedData.map((item) => (
-              <tr key={item._id}>
-                <td>{item.city}</td>
-                <td>{Math.round(item.tempC)} °C</td>
-                <td>{item.description}</td>
-                <td>{item.wind.speed} m/s</td>
-                <td>{new Date(item.savedAt).toLocaleString()}</td>
+
+      <button onClick={fetchSavedData} style={{ marginBottom: 16 }}>
+        📊 Load Saved Data
+      </button>
+
+      {/* ✅ only show after button clicked */}
+      {isButtonClicked && (
+        savedData.length > 0 ? (
+          <table border="1" cellPadding="8" style={{ margin: "auto", marginTop: 16 }}>
+            <thead>
+              <tr>
+                <th>City</th>
+                <th>Temperature</th>
+                <th>Description</th>
+                <th>Wind Speed</th>
+                <th>Saved At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : <div>No data saved yet.</div>}
+            </thead>
+            <tbody>
+              {savedData.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.city}</td>
+                  <td>{Math.round(item.tempC)} °C</td>
+                  <td>{item.description}</td>
+                  <td>{item.wind.speed} m/s</td>
+                  <td>{new Date(item.savedAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div style={{ marginTop: 16, color: "red", fontWeight: "bold" }}>
+            ❌ No saved data
+          </div>
+        )
+      )}
     </div>
   );
 }
