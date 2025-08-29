@@ -33,7 +33,7 @@
   }
 }
 input::placeholder {
-  color: #000000;
+  color: white;
   opacity: 1;   
 }
 
@@ -175,6 +175,7 @@ h1, h2, p, span, button {
 }
 
 button{
+  background-color:white;
   border: 1px solid black;
 }
 button:hover{
